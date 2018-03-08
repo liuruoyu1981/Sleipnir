@@ -15,7 +15,7 @@ namespace Sleipnir
         public Node Node {
             get { return m_Node; }
         }
-        //[HideInInspector]
+        [HideInInspector]
         public bool IsDeleted = false;
         
         public string ID {

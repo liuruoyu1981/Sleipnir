@@ -1,7 +1,9 @@
 # Sleipnir
-A graph editor framework leveraging the unity asset store asset [Odin](http://sirenix.net/odininspector)
+A graph editor framework leveraging the unity asset store asset [Odin](http://sirenix.net/odininspector "Odin")
 
 (pronounced “SLAYP-neer”; “The Sliding One”)
+
+![Gif of the graph editor](example.gif "")
 
 THIS PROJECT IS STILL WIP
 The main reason I created this was to have a visual way to build and modify graph hierarchies
