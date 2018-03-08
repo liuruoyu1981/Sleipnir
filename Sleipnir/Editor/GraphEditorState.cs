@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 using Sirenix.Utilities.Editor;
-using RGL.Extensions;
 
 namespace Sleipnir
 {

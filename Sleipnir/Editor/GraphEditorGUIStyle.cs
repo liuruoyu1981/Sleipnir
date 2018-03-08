@@ -23,6 +23,7 @@ namespace Sleipnir
         
         private void OnEnable()
         {
+            base.OnEnable();
             nodeStyle = new GUIStyle();
             nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
             nodeStyle.border = new RectOffset(2, 2, 2, 2);
