@@ -7,8 +7,9 @@ using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
+using Sleipnir;
 
-namespace Sleipnir
+namespace Sleipnir.Editor
 {        
     public partial class GraphEditor
     {        
@@ -21,9 +22,8 @@ namespace Sleipnir
         [HideInInspector]
         public GUIStyle outPointStyle;
         
-        private void OnEnable()
+        public void LoadStyles()
         {
-            base.OnEnable();
             nodeStyle = new GUIStyle();
             nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
             nodeStyle.border = new RectOffset(2, 2, 2, 2);

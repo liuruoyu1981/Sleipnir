@@ -7,8 +7,9 @@ using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
+using Sleipnir;
 
-namespace Sleipnir
+namespace Sleipnir.Editor
 {
     
     [OdinDrawer]
@@ -18,7 +19,7 @@ namespace Sleipnir
         {
             entry.SmartValue.BeginDraw();
             GUIHelper.PushHierarchyMode(false);
-            GUIHelper.PushLabelWidth(100);
+            GUIHelper.PushLabelWidth(entry.SmartValue.Rect.width * 0.3f);
             this.CallNextDrawer(entry, null);
             GUIHelper.PopLabelWidth();
             GUIHelper.PopHierarchyMode();

@@ -7,8 +7,9 @@ using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
+using Sleipnir;
 
-namespace Sleipnir
+namespace Sleipnir.Editor
 {        
     public partial class GraphEditor
     {
@@ -95,6 +96,8 @@ namespace Sleipnir
                     {
                         currentRect.xMin += delta.x;
                     }
+                    if (currentRect.width < 25f) currentRect.width = 25f;
+                    if (currentRect.height < 25f) currentRect.height = 25f;
                 }
                 if (IsDragging)
                 {
@@ -170,8 +173,17 @@ namespace Sleipnir
             }
             if (!onNode)
             {
-                menu.AddItem(new GUIContent("Create Node"), false, () => { CreateNode(currentPosition); }); 
+                for (int i = 0; i < INodeTypes.Count; i++) {
+                    Type type = INodeTypes[i];
+                    menu.AddItem(new GUIContent("Create Node/" + type.ToString()), false, () => { CreateNode(type, currentPosition); }); 
+                }
             }
+            if (selectedOut != null)
+            {
+                menu.AddSeparator("");
+                menu.AddItem(new GUIContent("Cancel Connection"), false, () => { selectedOut = null; });
+            }
+            
             menu.ShowAsContext();
         }
         
@@ -184,49 +196,18 @@ namespace Sleipnir
             ResizeLeft = false;
             IsPanning = false;
             IsDragging = false;
+            Rect workingRect;
+            for (int i = 0; i < Nodes.Count; i++) {
+                workingRect = Nodes[i].Rect;
+                workingRect.x = Mathf.Round(workingRect.x / m_Graph.GridSnapSize) * m_Graph.GridSnapSize;
+                workingRect.y = Mathf.Round(workingRect.y / m_Graph.GridSnapSize) * m_Graph.GridSnapSize;
+                Nodes[i].Rect = workingRect;
+            }
         }
         
         public void OnScrollWheel()
         {
             Zoom += -Event.current.delta.y / ZoomSpeed;
-        }
-        
-        private void CreateNode(Vector2 gridPosition)
-        {
-            Node newNode = new Node(gridPosition);
-            m_Graph.Nodes.Add(newNode);
-            Nodes.Add(new GraphNode(this, newNode));
-        }
-        
-        private void CreateConnection()
-        {
-            for (int i = 0; i < m_Graph.Connections.Count; i++) {
-                if (m_Graph.Connections[i].A.ID == selectedOut.ID && m_Graph.Connections[i].B.ID == selectedIn.ID)
-                {
-                    return;
-                }
-            }
-            Connection newConn = new Connection(selectedOut.Node, selectedIn.Node);
-            m_Graph.Connections.Add(newConn);
-            Connections.Add(new GraphConnection(this, newConn, selectedOut, selectedIn));
-        }
-        
-        public void OnClickInPoint(GraphNode node)
-        {
-            if (selectedOut == null) return;
-            selectedIn = node;
-            if (selectedIn != selectedOut)
-            {
-                CreateConnection();
-            }
-            selectedIn = null;
-            selectedOut = null;
-        }
-
-        public void OnClickOutPoint(GraphNode node)
-        {
-            selectedIn = null;
-            selectedOut = node;
         }
     }
 }

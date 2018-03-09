@@ -5,39 +5,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using Sleipnir;
 
-namespace Sleipnir
+namespace Sleipnir.Editor
 {
     [Serializable]
     public class GraphNode {
-        private GraphEditor m_Editor;
-        private Node m_Node;
-        public Node Node {
+        private INode m_Node;
+        
+        [ShowInInspector, InlineEditor(InlineEditorModes.GUIOnly)]
+        public INode Node {
             get { return m_Node; }
+            set {
+                m_Editor.SwapNode(this, value);
+            }
         }
+
         [HideInInspector]
         public bool IsDeleted = false;
         
+        [HideInInspector]
         public string ID {
             get { return m_Node.ID; }
         }
+
+        [HideInInspector]
         public Rect Rect {
             get { return m_Node.Rect; }
             set { m_Node.Rect = value; }
         }
 
-        [ShowInInspector, ReadOnly]
-        public string Name {
-            get { return m_Node.Name; }
-        }
-        
-        [ShowInInspector, HideReferenceObjectPicker]
-        public INode Data {
-            get { return m_Node.Data; }
-            set { m_Node.Data = value; }
-        }
+        private GraphEditor m_Editor;
 
-        public GraphNode(GraphEditor editor, Node node)
+        public GraphNode(GraphEditor editor, INode node)
         {
             m_Editor = editor;
             m_Node = node;
@@ -58,7 +59,7 @@ namespace Sleipnir
         
         public override string ToString()
         {
-            return Name;
+            return m_Node.Name;
         }
         
         public Rect InputKnob ()
@@ -206,7 +207,6 @@ namespace Sleipnir
         public void BeginDraw()
         {
             GUI.Box(m_Editor.GridToGUIDrawRect(Rect), "");
-            // Knobs should be a texture?
             if (GUI.Button(m_Editor.GridToGUIDrawRect(InputKnob()), ""))
             {
                 m_Editor.OnClickInPoint(this);
@@ -215,20 +215,6 @@ namespace Sleipnir
             {
                 m_Editor.OnClickOutPoint(this);
             }
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(InputKnob()), Color.black);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(OutputKnob()), Color.black);
-            
-            // Debug
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(InputKnob()), Color.black);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(OutputKnob()), Color.red);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(TopEdge()), Color.red);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(BottomEdge()), Color.blue);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(RightEdge()), Color.green);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(LeftEdge()), Color.yellow);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(TopRightCorner()), Color.black);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(TopLeftCorner()), Color.black);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(BottomRightCorner()), Color.black);
-            //EditorGUI.DrawRect(m_Editor.GridToGUIDrawRect(BottomLeftCorner()), Color.black);
             GUILayout.BeginArea(m_Editor.GridToGUIDrawRect(Rect));
         }
         

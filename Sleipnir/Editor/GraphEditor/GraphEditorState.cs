@@ -1,8 +1,11 @@
 ﻿#if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.Utilities.Editor;
+using Sleipnir;
 
-namespace Sleipnir
+namespace Sleipnir.Editor
 {
     public partial class GraphEditor
     {
@@ -54,6 +57,20 @@ namespace Sleipnir
             float xOffset = (center.x * Zoom + (Pan.x + gridPosition.x));
             float yOffset = (center.y * Zoom + (Pan.y + gridPosition.y));
             return new Vector2(xOffset, yOffset);
+        }
+
+        private List<Type> INodeTypes;
+        private void LoadNodeTypes() {
+            INodeTypes = new List<Type>();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach( var assembly in assemblies ) {
+                var types = assembly.GetTypes();
+                foreach( var t in types ) {
+                    if( typeof( INode ).IsAssignableFrom( t ) && !t.IsAbstract ) {
+                        INodeTypes.Add( t );
+                    }
+                }
+            }
         }
     }
 }
